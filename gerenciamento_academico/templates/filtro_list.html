@@ -408,19 +408,6 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
                         </div>
-                        <select onchange="window.location.href = this.value;">
-                            <option value="" selected>Selecione uma opção</option>
-                            {% for curso in cursos%}
-                            <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}</option>
-                            {% endfor %}
-                        </select>
-
-                        <select onchange="window.location.href = this.value;">
-                            <option value="" selected>Selecione uma opção</option>
-                            {% for campuss in campus %}
-                            <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
-                            {% endfor %}
-                        </select>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -463,7 +450,6 @@
                                                 </select>
                                                 <div class="aviso-b">
                                                     <button class="btn btn-danger" onclick=fecharModal({{object.id}})>Cancelar</button>
-                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -475,7 +461,62 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome Completo</th>
+                                            <th>CPF</th>
+                                            <th>Matricula</th>
+                                            <th>Curso</th>
+                                            <th>Data de Nascimento</th>
+                                            <th>Situação</th>
+                                            <th>Forma de Ingresso</th>
+                                            <th>Vinculo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for object in inativos %}
+                                        <tr>
+                                            <td>{{object.nome_completo}}</td>
+                                            <td>{{object.cpf}}</td>
+                                            <td>{{object.matricula}}</td>
+                                            <td>{{object.curso}}</td>
+                                            <td>{{object.data_de_nascimento}}</td>
+                                            <td>{{object.get_situacao_display}}</td>
+                                            <td>{{object.get_forma_de_ingresso_display}}</td>
+                                            <td>
+                                                {{object.get_vinculo_display}}
+                                                <button onclick=mostrarModal({{object.id}})>X</button>
+                                            </td>
+                                            
+                                        </tr>
+                                        
+                                        <div id="meuModal{{object.id}}" class="modal">
+                                            <div class="modal-content">
+                                                <select onchange="window.location.href = this.value;">
+                                                    <option value="" selected>Selecione uma opção</option>
+                                                    {% for situ in situacao %}
+                                                    <option value="{% url 'gerenciamento_academico:atualizar' object.id situ.0 %}">{{ situ.1 }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <div class="aviso-b">
+                                                    <button class="btn btn-danger" onclick=fecharModal({{object.id}})>Cancelar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
