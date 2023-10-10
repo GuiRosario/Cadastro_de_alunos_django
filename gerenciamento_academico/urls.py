@@ -7,5 +7,4 @@ urlpatterns = [
     path("list",views.ListarView.as_view(),name="lista"),
     path("list/curso/<int:pk>/",views.FiltroListView.as_view(),name="lista-curso"),
     path("list/campus/<int:pk>/",views.FiltroListView.as_view(),name="lista-campus"),
-    path("list/atualizar/<int:pk>/<int:situ>",views.ListarView.as_view(),name="atualizar")
 ]
