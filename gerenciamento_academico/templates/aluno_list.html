@@ -1,53 +1,25 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <ul>
-        {% for object in alunos %}
-        <li>
-            <div>
-                {{ object.nome_completo}}
-            </div>
-        </li>
-        {% empty %}
-        <li>No objects yet.</li>
-        {% endfor %}
-    </ul>
-    </body>
-</html> -->
 {% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>SB Admin 2 - Tables</title>
     {% load static %}
-    <!-- Custom fonts for this template -->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-    <script src="https://kit.fontawesome.com/157e9b5dbb.js" crossorigin="anonymous"></script>
-    <!-- Custom styles for this template -->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-
-    <!-- Custom styles for this page -->
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
 <style>
-        .modal {
+    .modal {
         display: none;
         position: fixed;
         top: 50%;
@@ -57,49 +29,60 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.2);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            width: 20% !important;
-            text-align: center;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }
-        .container {
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        width: 20% !important;
+        text-align: center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        /* Alinha os elementos nos limites opostos */
+    }
+
+    .botoes-container button {
+        display: inline-block;
+        margin-right: 20px;
+        /* Espaço entre os botões (opcional) */
+    }
+    .card-header{
             display: flex;
-            justify-content: space-between; /* Alinha os elementos nos limites opostos */
-        }
-        .botoes-container button {
-            display: inline-block;
-            margin-right: 20px; /* Espaço entre os botões (opcional) */
-        }
-
+            justify-content: space-between;
+    }
+    .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-in-out;
+    }
+    .expanded {
+            max-height: 200px; /* Ajuste a altura máxima conforme necessário */
+    }
 </style>
-<body id="page-top">
 
+<body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
-
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/alunos/list">
                 <i class="fa-solid fa-school fa-2xl" style="color: #ffffff;"></i>
                 <div class="sidebar-brand-text mx-3">G.A</div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
-
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="/alunos/form">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Cadastrar Aluno</span></a>
             </li>
-
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
                 <a class="nav-link" href="/alunos/list">
@@ -113,16 +96,12 @@
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
         </ul>
         <!-- End of Sidebar -->
-
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <h1>Gerenciamento Acadêmico</h1>
@@ -132,66 +111,64 @@
                             <i class="fa fa-bars"></i>
                         </button>
                     </form>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
                         <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
-                                <img class="img-profile rounded-circle"
-                                    src="{% static 'img/undraw_profile.svg' %}">
+                                <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}">
                             </a>
                         </li>
-
                     </ul>
-
                 </nav>
-
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- DataTales Example -->
-                    <div class="card shadow mb-4" style="width: 400px;">
-                        <div class="card-header py-4">
-                            <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="select-container">
-                                <label for="select1">Curso:</label>
-                                <select class="form-control" id="select1" onchange="window.location.href = this.value;">
-                                    <option value="" selected>Selecione uma opção</option>
-                                    {% for curso in cursos%}
-                                    <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}</option>
-                                    {% endfor %}
-                                </select>
-                                <br>
-                                <label for="select2">Campus:</label>
-                                <select class="form-control" id="select2" onchange="window.location.href = this.value;">
-                                    <option value="" selected>Selecione uma opção</option>
-                                    {% for campuss in campus %}
-                                    <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Alunos</h6>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <i onclick=toggleCard('filtro') class="fa-solid fa-circle-chevron-down showicon"></i>
+                                        Filtros
+                                    </div>
+                                </div>
+                                <div class="card-content" id='filtro'>
+                                    <div class="card-body">
+                                        <div class="select-container">
+                                            <label for="select1">Curso:</label>
+                                            <select class="form-control" id="select1" onchange="window.location.href = this.value;">
+                                                <option value="" selected>Selecione uma opção</option>
+                                                {% for curso in cursos%}
+                                                <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                            <br>
+                                            <label for="select2">Campus:</label>
+                                            <select class="form-control" id="select2" onchange="window.location.href = this.value;">
+                                                <option value="" selected>Selecione uma opção</option>
+                                                {% for campuss in campus %}
+                                                <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>N.</th>
+                                            <th>Matricula</th>
                                             <th>Nome Completo</th>
                                             <th>CPF</th>
-                                            <th>Matricula</th>
                                             <th>Curso</th>
                                             <th>Data de Nascimento</th>
                                             <th>Situação</th>
@@ -200,84 +177,76 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for object in alunos %}
+                                        {% for aluno in object_list %}
                                         <tr>
-                                            <td>{{object.nome_completo}}</td>
-                                            <td>{{object.cpf}}</td>
-                                            <td>{{object.matricula}}</td>
-                                            <td>{{object.curso}}</td>
-                                            <td>{{object.data_de_nascimento}}</td>
-                                            <td>{{object.get_situacao_display}}</td>
-                                            <td>{{object.get_forma_de_ingresso_display}}</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{aluno.matricula}}</td>
+                                            <td>{{aluno.nome_completo}}</td>
+                                            <td>{{aluno.cpf}}</td>
+                                            <td>{{aluno.curso}}</td>
+                                            <td>{{aluno.data_de_nascimento}}</td>
+                                            <td>{{aluno.get_situacao_display}}</td>
+                                            <td>{{aluno.get_forma_de_ingresso_display}}</td>
                                             <td>
                                                 <div class="container">
-                                                    {{object.get_vinculo_display}}
-                                                    <i onclick=mostrarModal({{object.id}}) class="fa-solid fa-pencil" style="color: #4e73df;"></i>
+                                                    {{aluno.get_vinculo_display}}
+                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                        style="color: #4e73df;"></i>
                                                 </div>
                                             </td>
                                         </tr>
-                                        
-                                        <div id="meuModal{{object.id}}" class="modal">
+                                        <div id="meuModal{{aluno.id}}" class="modal">
                                             <div class="modal-content">
                                                 <form method="post">
                                                     {% csrf_token %}
                                                     <div>
-                                                        <label for="selecionar-situacao">Selecione o novo vinculo:</label>
-                                                        <select id="selecionar-situacao" name="atualizar" class="form-control">
+                                                        <label for="selecionar-situacao">Selecione o novo
+                                                            vinculo:</label>
+                                                        <select id="selecionar-situacao" name="atualizar"
+                                                            class="form-control">
                                                             {% for situ in situacao %}
-                                                            <option value={{object.id}},{{situ.0}}>{{ situ.1 }}</option>
+                                                            <option value={{aluno.id}},{{situ.0}}>{{ situ.1 }}</option>
                                                             {% endfor %}
                                                         </select>
                                                         <br>
                                                         <div class="botoes-container">
-                                                            <button class="btn btn-primary" type="submit" style="width: 100px;">Enviar</button>
-                                                            <button type="button" class="btn btn-danger" onclick=fecharModal({{object.id}}) style="width: 100px;">Cancelar</button>
+                                                            <button class="btn btn-primary" type="submit"
+                                                                style="width: 100px;">Enviar</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick=fecharModal({{aluno.id}})
+                                                                style="width: 100px;">Cancelar</button>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                        
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                
+                                <h4>Total de Alunos Geral: {{contagem_alunos_geral}}</h4>
+                                <h4>Total de Alunos Ativos: {{contagem_alunos_ativos}}</h4>
+                                <h4>Total de Alunos Inativos: {{contagem_alunos_inativos}}</h4>
+                                {% for contagem_alunos_por_curso in lista_contagem_alunos_por_cursos%}
+                                <h4>{{contagem_alunos_por_curso}}</h4>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
                 </div>
-                <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
-            
-            <!-- End of Footer -->
-
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-    <!-- End of Page Wrapper -->
 
-
-    <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Core plugin JavaScript-->
+    <script src="https://kit.fontawesome.com/157e9b5dbb.js" crossorigin="anonymous"></script>
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-    <!-- Page level plugins -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
     <script>
         function mostrarModal(Number) {
             var meuModal = document.getElementById("meuModal" + Number);
@@ -289,7 +258,18 @@
             var meuModal = document.getElementById("meuModal" + Number);
             meuModal.style.display = "none";
         }
+
+        function toggleCard(cardNumber) {
+            var cardContent = document.getElementById(cardNumber);
+            if (cardContent.classList.contains("expanded")) {
+                cardContent.classList.remove("expanded");
+            } else {
+                cardContent.classList.add("expanded");
+            }
+        }
+
     </script>
+    
 </body>
 
 </html>

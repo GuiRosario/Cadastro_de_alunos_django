@@ -29,13 +29,15 @@
 
 </head>
 <style>
-    #InputNomeCompleto{
+    #InputNomeCompleto {
         width: 500px;
     }
-    #InputCPF{
+
+    #InputCPF {
         width: 200px;
     }
 </style>
+
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -56,7 +58,7 @@
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="/alunos/form">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Cadastrar Aluno</span></a>
             </li>
 
@@ -103,8 +105,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
-                                <img class="img-profile rounded-circle"
-                                    src="{% static 'img/undraw_profile.svg' %}">
+                                <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}">
                             </a>
                         </li>
 
@@ -123,8 +124,10 @@
                             <div class="table-responsive">
                                 <form method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    <div class="mb-3"><label>Nome Completo</label>{% render_field form.nome_completo class+="form-control" style+="width:500px;"%}</div>
-                                    <div class="mb-3"><label>CPF</label>{% render_field form.cpf class+="form-control" style+="width:135px;"%}</div>
+                                    <div class="mb-3"><label>Nome Completo</label>
+                                        {% render_field form.nome_completo class+="form-control" style+="width:500px;"%}</div>
+                                    <div class="mb-3"><label>CPF</label>
+                                        {% render_field form.cpf class+="form-control" style+="width:135px;"%}</div>
                                     <div class="mb-3">
                                         <label for="">Selecionar Curso</label>
                                         {% render_field form.curso class+="form-control" style+="width:500px;"%}
@@ -136,11 +139,11 @@
                                     <div class="mb-3">
                                         <label>Escolha uma imagem</label>
                                         {% render_field form.image class+="form-control" style+="width:250px;" %}
-                                    <div class="mb-3">
-                                        <label>Forma de Ingresso</label>
-                                        {% render_field form.forma_de_ingresso class+="form-control" style+="width:120px;"%}
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                        <div class="mb-3">
+                                            <label>Forma de Ingresso</label>
+                                            {% render_field form.forma_de_ingresso class+="form-control" style+="width:120px;"%}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Cadastrar</button>
                                 </form>
                             </div>
                         </div>
@@ -180,7 +183,7 @@
 
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
-    <script>   
+    <script>
         const picker = new easepick.create({
             element: "#datepicker",
             css: [

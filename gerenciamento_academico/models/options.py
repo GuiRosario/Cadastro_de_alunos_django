@@ -1,10 +1,10 @@
-CAMPUS_CHOICES = {
+CAMPUS_CHOICES = (
     (1,'Palmas'),
     (2,'Porto Nacional'),
     (3,'Arraias'),
     (4,'Miracema'),
     (5,'Gurupi')
-}
+)
 
 SITUACAO_CHOICES = (
     (1,'Vinculado'),      

@@ -1,24 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <ul>
-        {% for object in alunos %}
-        <li>
-            <div>
-                {{ object.nome_completo}}
-            </div>
-        </li>
-        {% empty %}
-        <li>No objects yet.</li>
-        {% endfor %}
-    </ul>
-    </body>
-</html> -->
 {% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +26,7 @@
 
 </head>
 <style>
-        .modal {
+    .modal {
         display: none;
         position: fixed;
         top: 50%;
@@ -57,23 +36,30 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.2);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            width: 20% !important;
-            text-align: center;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }.container {
-            display: flex;
-            justify-content: space-between; /* Alinha os elementos nos limites opostos */
-        }
-        .botoes-container button {
-            display: inline-block;
-            margin-right: 20px; /* Espaço entre os botões (opcional) */
-        }
-        #voltar {
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        width: 20% !important;
+        text-align: center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        /* Alinha os elementos nos limites opostos */
+    }
+
+    .botoes-container button {
+        display: inline-block;
+        margin-right: 20px;
+        /* Espaço entre os botões (opcional) */
+    }
+
+    #voltar {
         display: inline-block;
         padding: 10px 20px;
         background-color: #4e73df;
@@ -81,12 +67,13 @@
         text-decoration: none;
         border-radius: 5px;
         font-weight: bold;
-        }
+    }
 
-        #voltar:hover {
+    #voltar:hover {
         background-color: #4e73df;
-        }
+    }
 </style>
+
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -107,7 +94,7 @@
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="/alunos/form">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Cadastrar Aluno</span></a>
             </li>
 
@@ -154,8 +141,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
-                                <img class="img-profile rounded-circle"
-                                    src="{% static 'img/undraw_profile.svg' %}">
+                                <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}">
                             </a>
                         </li>
 
@@ -178,9 +164,10 @@
                                 <table class="table table-bordered" id="" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>N.</th>
+                                            <th>Matricula</th>
                                             <th>Nome Completo</th>
                                             <th>CPF</th>
-                                            <th>Matricula</th>
                                             <th>Curso</th>
                                             <th>Data de Nascimento</th>
                                             <th>Situação</th>
@@ -189,49 +176,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for object in alunos %}
+                                        {% for aluno in object_list %}
                                         <tr>
-                                            <td>{{object.nome_completo}}</td>
-                                            <td>{{object.cpf}}</td>
-                                            <td>{{object.matricula}}</td>
-                                            <td>{{object.curso}}</td>
-                                            <td>{{object.data_de_nascimento}}</td>
-                                            <td>{{object.get_situacao_display}}</td>
-                                            <td>{{object.get_forma_de_ingresso_display}}</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{aluno.matricula}}</td>
+                                            <td>{{aluno.nome_completo}}</td>
+                                            <td>{{aluno.cpf}}</td>
+                                            <td>{{aluno.curso}}</td>
+                                            <td>{{aluno.data_de_nascimento}}</td>
+                                            <td>{{aluno.get_situacao_display}}</td>
+                                            <td>{{aluno.get_forma_de_ingresso_display}}</td>
                                             <td>
                                                 <div class="container">
-                                                    {{object.get_vinculo_display}}
-                                                    <i onclick=mostrarModal({{object.id}}) class="fa-solid fa-pencil" style="color: #4e73df;"></i>
+                                                    {{aluno.get_vinculo_display}}
+                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                        style="color: #4e73df;"></i>
                                                 </div>
                                             </td>
-                                            
+
                                         </tr>
-                                        
-                                        <div id="meuModal{{object.id}}" class="modal">
+
+                                        <div id="meuModal{{aluno.id}}" class="modal">
                                             <div class="modal-content">
                                                 <form method="post">
                                                     {% csrf_token %}
                                                     <div>
-                                                        <label for="selecionar-situacao">Selecione o novo vinculo:</label>
-                                                        <select id="selecionar-situacao" name="atualizar" class="form-control">
+                                                        <label for="selecionar-situacao">Selecione o novo
+                                                            vinculo:</label>
+                                                        <select id="selecionar-situacao" name="atualizar"
+                                                            class="form-control">
                                                             {% for situ in situacao %}
-                                                            <option value={{object.id}},{{situ.0}}>{{ situ.1 }}</option>
+                                                            <option value={{aluno.id}},{{situ.0}}>{{ situ.1 }}</option>
                                                             {% endfor %}
                                                         </select>
                                                         <br>
                                                         <div class="botoes-container">
-                                                            <button class="btn btn-primary" type="submit" style="width: 100px;">Enviar</button>
-                                                            <button type="button" class="btn btn-danger" onclick=fecharModal({{object.id}}) style="width: 100px;">Cancelar</button>
+                                                            <button class="btn btn-primary" type="submit"
+                                                                style="width: 100px;">Enviar</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick=fecharModal({{aluno.id}})
+                                                                style="width: 100px;">Cancelar</button>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                        
+
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                
+                                <h4>Total de Alunos Geral: {{contagem_alunos_geral}}</h4>
+                                <h4>Total de Alunos Ativos: {{contagem_alunos_ativos}}</h4>
                             </div>
                         </div>
                     </div>
@@ -244,9 +239,10 @@
                                 <table class="table table-bordered" id="" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>N.</th>
+                                            <th>Matricula</th>
                                             <th>Nome Completo</th>
                                             <th>CPF</th>
-                                            <th>Matricula</th>
                                             <th>Curso</th>
                                             <th>Data de Nascimento</th>
                                             <th>Situação</th>
@@ -255,39 +251,46 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for object in inativos %}
+                                        {% for aluno in inativos %}
                                         <tr>
-                                            <td>{{object.nome_completo}}</td>
-                                            <td>{{object.cpf}}</td>
-                                            <td>{{object.matricula}}</td>
-                                            <td>{{object.curso}}</td>
-                                            <td>{{object.data_de_nascimento}}</td>
-                                            <td>{{object.get_situacao_display}}</td>
-                                            <td>{{object.get_forma_de_ingresso_display}}</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{aluno.matricula}}</td>
+                                            <td>{{aluno.nome_completo}}</td>
+                                            <td>{{aluno.cpf}}</td>
+                                            <td>{{aluno.curso}}</td>
+                                            <td>{{aluno.data_de_nascimento}}</td>
+                                            <td>{{aluno.get_situacao_display}}</td>
+                                            <td>{{aluno.get_forma_de_ingresso_display}}</td>
                                             <td>
                                                 <div class="container">
-                                                    {{object.get_vinculo_display}}
-                                                    <i onclick=mostrarModal({{object.id}}) class="fa-solid fa-pencil" style="color: #4e73df;"></i>
+                                                    {{aluno.get_vinculo_display}}
+                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                        style="color: #4e73df;"></i>
                                                 </div>
                                             </td>
-                                            
+
                                         </tr>
-                                
-                                        <div id="meuModal{{object.id}}" class="modal">
+
+                                        <div id="meuModal{{aluno.id}}" class="modal">
                                             <div class="modal-content">
                                                 <form method="post">
                                                     {% csrf_token %}
                                                     <div>
-                                                        <label for="selecionar-situacao">Selecione o novo vinculo:</label>
-                                                        <select id="selecionar-situacao" name="atualizar" class="form-control">
+                                                        <label for="selecionar-situacao">Selecione o novo
+                                                            vinculo:</label>
+                                                        <select id="selecionar-situacao" name="atualizar"
+                                                            class="form-control">
                                                             {% for situ in situacao %}
-                                                            <option value={{object.id}},{{situ.0}}>{{ situ.1 }}</option>
+                                                            <option value={{aluno.id}},{{situ.0}}>{{ situ.1 }}</option>
                                                             {% endfor %}
                                                         </select>
                                                         <br>
                                                         <div class="botoes-container">
-                                                            <button class="btn btn-primary" type="submit" style="width: 100px;">Enviar</button>
-                                                            <button type="button" class="btn btn-danger" onclick=fecharModal({{object.id}}) style="width: 100px;">Cancelar</button>
+                                                            <button class="btn btn-primary" type="submit"
+                                                                style="width: 100px;">Enviar</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick=fecharModal({{aluno.id}})
+                                                                style="width: 100px;">Cancelar</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -296,8 +299,9 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                
+                                <h4>Total de Alunos Inativos: {{contagem_alunos_inativos}}</h4>
                             </div>
+
                         </div>
                     </div>
                 </div>
