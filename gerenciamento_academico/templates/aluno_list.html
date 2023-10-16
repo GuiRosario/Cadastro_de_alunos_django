@@ -54,17 +54,15 @@
     .card-header{
             display: flex;
             justify-content: space-between;
+            height: 70px;
     }
     .card-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.2s ease-in-out;
+            transition: max-height 3s ease-in-out;
     }
     .expanded {
             max-height: 200px; /* Ajuste a altura máxima conforme necessário */
-    }
-    #container_select_filter{
-        width: 300px;
     }
     #botao_filtro{
         width: 300px;
@@ -73,6 +71,17 @@
     #menus_dropdown{
         display: flex;
         justify-content: space-between;
+        z-index: 4;
+    }
+    #TextC{
+        position: absolute;
+        background-color: white;
+        color: #000;
+        z-index: 1; 
+        width: 300px;
+    }
+    .collapsing{
+        transition: 0.3s;
     }
 </style>
 
@@ -265,7 +274,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <div id="meuModal{{aluno.id}}" class="modal">
+                                        <div id="meuModal{{aluno.id}}" class="modal" style="z-index: 6;">
                                             <div class="modal-content">
                                                 <form method="post">
                                                     {% csrf_token %}
