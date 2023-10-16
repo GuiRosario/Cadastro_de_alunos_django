@@ -42,8 +42,8 @@
 
     .container {
         display: flex;
-        justify-content: space-between;
-        /* Alinha os elementos nos limites opostos */
+        justify-content: center;
+        align-items: center;
     }
 
     .botoes-container button {
@@ -62,6 +62,17 @@
     }
     .expanded {
             max-height: 200px; /* Ajuste a altura máxima conforme necessário */
+    }
+    #container_select_filter{
+        width: 300px;
+    }
+    #botao_filtro{
+        width: 300px;
+        text-align: left;
+    }
+    #menus_dropdown{
+        display: flex;
+        justify-content: space-between;
     }
 </style>
 
@@ -128,8 +139,8 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Alunos</h6>
-                            <div class="card">
+                            <h6 class="m-0 font-weight-bold text-primary" style="padding-top: 8px;">Alunos</h6>
+                            <!-- <div class="card">
                                 <div class="card-header">
                                     <div>
                                         <i onclick=toggleCard('filtro') class="fa-solid fa-circle-chevron-down showicon"></i>
@@ -158,6 +169,57 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div> -->
+                            <div id="menus_dropdown">
+                                <div id="container_select_filter" style="margin-right: 20px;">
+                                    <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filtro_conteudo" aria-expanded="false" aria-controls="collapseExample">
+                                        <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                        Filtros
+                                    </button>
+                                    <div class="collapse" id="filtro_conteudo">
+                                        <div class="card card-body" id="TextC">
+                                            <label for="select1">Curso:</label>
+                                            <select class="form-control" id="select1" onchange="window.location.href = this.value;">
+                                                <option value="" selected>Selecione uma opção</option>
+                                                {% for curso in cursos%}
+                                                <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                            <label for="select2" style="margin-top: 10px;">Campus:</label>
+                                            <select class="form-control" id="select2" onchange="window.location.href = this.value;">
+                                                <option value="" selected>Selecione uma opção</option>
+                                                {% for campuss in campus %}
+                                                <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="container_select_filter">
+                                    <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                        <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                        Contagem
+                                    </button>
+                                    <div class="collapse" id="collapseExample">
+                                        <div class="card card-body" id="TextC">
+                                            <h5><b>Geral:</b></h5>
+                                            <p>Total de Alunos Geral: {{contagem_alunos_geral}}</p>
+                                            <p>Total de Alunos Ativos: {{contagem_alunos_ativos}}</p>
+                                            <p>Total de Alunos Inativos: {{contagem_alunos_inativos}}</p>
+                                            <hr>
+                                            <h5><b>Por Curso:</b></h5>
+                                            {% for contagem_alunos_por_curso in lista_contagem_alunos_por_cursos%}
+                                            <p>{{contagem_alunos_por_curso}}</p>
+                                            {% endfor %}
+                                            <hr>
+                                            <h5><b>Por Campus:</b></h5>
+                                            {% for contagem_alunos_por_campus in lista_contagem_alunos_por_campus%}
+                                            <p>{{contagem_alunos_por_campus}}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -174,6 +236,7 @@
                                             <th>Situação</th>
                                             <th>Forma de Ingresso</th>
                                             <th>Vinculo</th>
+                                            <th>Alterar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -188,8 +251,15 @@
                                             <td>{{aluno.get_situacao_display}}</td>
                                             <td>{{aluno.get_forma_de_ingresso_display}}</td>
                                             <td>
-                                                <div class="container">
+                                                {{aluno.get_vinculo_display}}
+                                                <!-- <div class="container">
                                                     {{aluno.get_vinculo_display}}
+                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                        style="color: #4e73df;"></i>
+                                                </div> -->
+                                            </td>
+                                            <td>
+                                                <div class="container">
                                                     <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
                                                         style="color: #4e73df;"></i>
                                                 </div>
@@ -223,12 +293,7 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                <h4>Total de Alunos Geral: {{contagem_alunos_geral}}</h4>
-                                <h4>Total de Alunos Ativos: {{contagem_alunos_ativos}}</h4>
-                                <h4>Total de Alunos Inativos: {{contagem_alunos_inativos}}</h4>
-                                {% for contagem_alunos_por_curso in lista_contagem_alunos_por_cursos%}
-                                <h4>{{contagem_alunos_por_curso}}</h4>
-                                {% endfor %}
+                                
                             </div>
                         </div>
                     </div>

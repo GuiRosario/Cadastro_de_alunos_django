@@ -39,15 +39,17 @@ class ListarView(ListView):
         ids_cursos = list(Curso.objects.values_list('id',flat=True))
         valores_campus = [item[0] for item in CAMPUS_CHOICES]
         nome_campus = [item[1] for item in CAMPUS_CHOICES]
-        lista_contadores = []
+        lista_contadores_curso = []
+        lista_contadores_campus = []
         for i in ids_cursos:
             curso = Curso.objects.get(id=i)
             contagem = Aluno.objects.filter(curso=curso).count()
-            lista_contadores.append(f'Numero de alunos de {curso}:{contagem}')
+            lista_contadores_curso.append(f'Numero de alunos de {curso}: {contagem}')
         for i in valores_campus:
             contagem = Aluno.objects.filter(curso__campus=i).count()
-            lista_contadores.append(f'Numero de alunos de {nome_campus[i-1]}:{contagem}')
-        context['lista_contagem_alunos_por_cursos'] = lista_contadores
+            lista_contadores_campus.append(f'Numero de alunos de {nome_campus[i-1]}: {contagem}')
+        context['lista_contagem_alunos_por_cursos'] = lista_contadores_curso
+        context['lista_contagem_alunos_por_campus'] = lista_contadores_campus
         context['contagem_alunos_geral'] = contagem_alunos_geral
         context['contagem_alunos_ativos'] = contagem_alunos_ativos
         context['contagem_alunos_inativos'] = contagem_alunos_inativos

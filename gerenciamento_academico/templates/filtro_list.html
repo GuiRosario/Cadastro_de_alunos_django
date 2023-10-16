@@ -49,8 +49,8 @@
 
     .container {
         display: flex;
-        justify-content: space-between;
-        /* Alinha os elementos nos limites opostos */
+        justify-content: center;
+        align-items: center;
     }
 
     .botoes-container button {
@@ -71,6 +71,21 @@
 
     #voltar:hover {
         background-color: #4e73df;
+    }
+    .card-header{
+            display: flex;
+            justify-content: space-between;
+    }
+    #container_select_filter{
+        width: 300px;
+    }
+    #botao_filtro{
+        width: 300px;
+        text-align: left;
+    }
+    #menus_dropdown{
+        display: flex;
+        justify-content: space-between;
     }
 </style>
 
@@ -157,7 +172,19 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary" style="padding-top: 8px;">Alunos Ativos</h6>
+                            <div id="container_select_filter">
+                                <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                    Contagem
+                                </button>
+                                <div class="collapse" id="collapseExample">
+                                    <div class="card card-body" id="TextC">
+                                        <p>Total de Alunos Geral: {{contagem_alunos_geral}}</p >
+                                        <p>Total de Alunos Ativos: {{contagem_alunos_ativos}}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -173,6 +200,7 @@
                                             <th>Situação</th>
                                             <th>Forma de Ingresso</th>
                                             <th>Vinculo</th>
+                                            <th>Alterar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -186,9 +214,9 @@
                                             <td>{{aluno.data_de_nascimento}}</td>
                                             <td>{{aluno.get_situacao_display}}</td>
                                             <td>{{aluno.get_forma_de_ingresso_display}}</td>
+                                            <td>{{aluno.get_vinculo_display}}</td>
                                             <td>
-                                                <div class="container">
-                                                    {{aluno.get_vinculo_display}}
+                                                <div class="container">                           
                                                     <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
                                                         style="color: #4e73df;"></i>
                                                 </div>
@@ -201,8 +229,7 @@
                                                 <form method="post">
                                                     {% csrf_token %}
                                                     <div>
-                                                        <label for="selecionar-situacao">Selecione o novo
-                                                            vinculo:</label>
+                                                        <label for="selecionar-situacao">Selecione o novo vinculo:</label>
                                                         <select id="selecionar-situacao" name="atualizar"
                                                             class="form-control">
                                                             {% for situ in situacao %}
@@ -225,14 +252,24 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                <h4>Total de Alunos Geral: {{contagem_alunos_geral}}</h4>
-                                <h4>Total de Alunos Ativos: {{contagem_alunos_ativos}}</h4>
+                                
                             </div>
                         </div>
                     </div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary" style="padding-top: 8px;">Alunos inativos</h6>
+                            <div id="container_select_filter">
+                                <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#contagem_inativos" aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                    Contagem
+                                </button>
+                                <div class="collapse" id="contagem_inativos">
+                                    <div class="card card-body" id="TextC">
+                                        <p>Total de Alunos Inativos: {{contagem_alunos_inativos}}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="">
@@ -248,6 +285,7 @@
                                             <th>Situação</th>
                                             <th>Forma de Ingresso</th>
                                             <th>Vinculo</th>
+                                            <th>Alterar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -261,9 +299,9 @@
                                             <td>{{aluno.data_de_nascimento}}</td>
                                             <td>{{aluno.get_situacao_display}}</td>
                                             <td>{{aluno.get_forma_de_ingresso_display}}</td>
+                                            <td>{{aluno.get_vinculo_display}}</td>
                                             <td>
-                                                <div class="container">
-                                                    {{aluno.get_vinculo_display}}
+                                                <div class="container">                        
                                                     <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
                                                         style="color: #4e73df;"></i>
                                                 </div>
@@ -299,7 +337,6 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                <h4>Total de Alunos Inativos: {{contagem_alunos_inativos}}</h4>
                             </div>
 
                         </div>
