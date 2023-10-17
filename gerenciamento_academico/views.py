@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from django.views import generic,View
 from django.http import HttpResponse, HttpResponseRedirect
 from .models.options import SITUACAO_CHOICES
-
+import json
 
 class AlunosFormView(FormView):
     template_name = "alunos.html"
@@ -32,30 +32,42 @@ class ListarView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cursos = Curso.objects.all()
+        lista_de_objetos_curso = Curso.objects.all()
+
         contagem_alunos_geral = Aluno.objects.count()
         contagem_alunos_ativos = Aluno.objects.filter(vinculo=1).count()
         contagem_alunos_inativos = Aluno.objects.filter(vinculo=2).count()
-        ids_cursos = list(Curso.objects.values_list('id',flat=True))
-        valores_campus = [item[0] for item in CAMPUS_CHOICES]
-        nome_campus = [item[1] for item in CAMPUS_CHOICES]
-        lista_contadores_curso = []
-        lista_contadores_campus = []
-        for i in ids_cursos:
-            curso = Curso.objects.get(id=i)
-            contagem = Aluno.objects.filter(curso=curso).count()
-            lista_contadores_curso.append(f'Numero de alunos de {curso}: {contagem}')
-        for i in valores_campus:
-            contagem = Aluno.objects.filter(curso__campus=i).count()
-            lista_contadores_campus.append(f'Numero de alunos de {nome_campus[i-1]}: {contagem}')
-        context['lista_contagem_alunos_por_cursos'] = lista_contadores_curso
-        context['lista_contagem_alunos_por_campus'] = lista_contadores_campus
+        lista_alunos_ativos_inativos = [contagem_alunos_ativos,contagem_alunos_inativos]
+        lista_numero_de_alunos_por_curso_apresentacao = []
+        lista_numero_de_alunos_por_campus_apresentacao = []
+        lista_numero_de_alunos_por_curso = []
+        lista_numero_de_alunos_por_campus = []
+        lista_nome_dos_cursos = []
+        lista_nome_dos_campus = []
+
+        for objeto_curso in lista_de_objetos_curso:
+            numero_de_alunos_atual = Aluno.objects.filter(curso=objeto_curso.id).count()
+            lista_numero_de_alunos_por_curso_apresentacao.append(f'Numero de alunos de {str(objeto_curso)}: {Aluno.objects.filter(curso=objeto_curso.id).count()}')
+            lista_nome_dos_cursos.append(str(objeto_curso))
+            lista_numero_de_alunos_por_curso.append(numero_de_alunos_atual)
+        for campus_id, campus_name in CAMPUS_CHOICES:
+            numero_de_alunos_atual = Aluno.objects.filter(curso__campus=campus_id).count()
+            lista_numero_de_alunos_por_campus_apresentacao.append(f'Numero de alunos de {campus_name}: {numero_de_alunos_atual}')
+            lista_nome_dos_campus.append(campus_name)
+            lista_numero_de_alunos_por_campus.append(numero_de_alunos_atual)
+        context['lista_alunos_ativos_inativos'] = json.dumps(lista_alunos_ativos_inativos)
+        context['lista_nome_dos_cursos'] = json.dumps(lista_nome_dos_cursos)
+        context['lista_numero_de_alunos_por_curso'] = json.dumps(lista_numero_de_alunos_por_curso)
+        context['lista_nome_dos_campus'] = json.dumps(lista_nome_dos_campus)
+        context['lista_numero_de_alunos_por_campus'] = json.dumps(lista_numero_de_alunos_por_campus)
+        context['lista_numero_de_alunos_por_curso_apresentacao'] = lista_numero_de_alunos_por_curso_apresentacao
+        context['lista_numero_de_alunos_por_campus_apresentacao'] = lista_numero_de_alunos_por_campus_apresentacao
         context['contagem_alunos_geral'] = contagem_alunos_geral
         context['contagem_alunos_ativos'] = contagem_alunos_ativos
         context['contagem_alunos_inativos'] = contagem_alunos_inativos
         context['campus'] = CAMPUS_CHOICES
         context['situacao'] = SITUACAO_CHOICES
-        context['cursos'] = cursos
+        context['cursos'] = lista_de_objetos_curso
         return context
     
     def post(self,request):

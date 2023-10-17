@@ -16,7 +16,7 @@
         rel="stylesheet">
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <style>
     .modal {
@@ -51,6 +51,10 @@
         margin-right: 20px;
         /* Espaço entre os botões (opcional) */
     }
+    #coluna{
+        display: flex;
+        flex-direction: column;
+    }
     .card-header{
             display: flex;
             justify-content: space-between;
@@ -73,6 +77,10 @@
         justify-content: space-between;
         z-index: 4;
     }
+    #graficos{
+        display: flex;
+        
+    }
     #TextC{
         position: absolute;
         background-color: white;
@@ -83,6 +91,10 @@
     .collapsing{
         transition: 0.3s;
     }
+    .col-xl-4{
+        padding-right: 0;
+        padding-left: 0;
+    }   
 </style>
 
 <body id="page-top">
@@ -146,167 +158,217 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary" style="padding-top: 8px;">Alunos</h6>
-                            <!-- <div class="card">
-                                <div class="card-header">
-                                    <div>
-                                        <i onclick=toggleCard('filtro') class="fa-solid fa-circle-chevron-down showicon"></i>
-                                        Filtros
+                    <div id="coluna">
+                        <div id="graficos" class="shadow mb-4">
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="card">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Distribuição dos alunos nos Cursos</h6>
                                     </div>
-                                </div>
-                                <div class="card-content" id='filtro'>
+                                    <!-- Card Body -->
                                     <div class="card-body">
-                                        <div class="select-container">
-                                            <label for="select1">Curso:</label>
-                                            <select class="form-control" id="select1" onchange="window.location.href = this.value;">
-                                                <option value="" selected>Selecione uma opção</option>
-                                                {% for curso in cursos%}
-                                                <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
-                                                </option>
-                                                {% endfor %}
-                                            </select>
-                                            <br>
-                                            <label for="select2">Campus:</label>
-                                            <select class="form-control" id="select2" onchange="window.location.href = this.value;">
-                                                <option value="" selected>Selecione uma opção</option>
-                                                {% for campuss in campus %}
-                                                <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
-                                                {% endfor %}
-                                            </select>
+                                        <div class="chart-pie pt-4">
+                                            <canvas id="GraficoCursos"></canvas>
                                         </div>
+                                        <hr>
                                     </div>
                                 </div>
-                            </div> -->
-                            <div id="menus_dropdown">
-                                <div id="container_select_filter" style="margin-right: 20px;">
-                                    <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filtro_conteudo" aria-expanded="false" aria-controls="collapseExample">
-                                        <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
-                                        Filtros
-                                    </button>
-                                    <div class="collapse" id="filtro_conteudo">
-                                        <div class="card card-body" id="TextC">
-                                            <label for="select1">Curso:</label>
-                                            <select class="form-control" id="select1" onchange="window.location.href = this.value;">
-                                                <option value="" selected>Selecione uma opção</option>
-                                                {% for curso in cursos%}
-                                                <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
-                                                </option>
-                                                {% endfor %}
-                                            </select>
-                                            <label for="select2" style="margin-top: 10px;">Campus:</label>
-                                            <select class="form-control" id="select2" onchange="window.location.href = this.value;">
-                                                <option value="" selected>Selecione uma opção</option>
-                                                {% for campuss in campus %}
-                                                <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
-                                                {% endfor %}
-                                            </select>
+                            </div>
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="card">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Distribuição dos alunos nos Campi</h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div class="chart-pie pt-4">
+                                            <canvas id="GraficoCampus"></canvas>
                                         </div>
+                                        <hr>
                                     </div>
                                 </div>
-                                <div id="container_select_filter">
-                                    <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                        <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
-                                        Contagem
-                                    </button>
-                                    <div class="collapse" id="collapseExample">
-                                        <div class="card card-body" id="TextC">
-                                            <h5><b>Geral:</b></h5>
-                                            <p>Total de Alunos Geral: {{contagem_alunos_geral}}</p>
-                                            <p>Total de Alunos Ativos: {{contagem_alunos_ativos}}</p>
-                                            <p>Total de Alunos Inativos: {{contagem_alunos_inativos}}</p>
-                                            <hr>
-                                            <h5><b>Por Curso:</b></h5>
-                                            {% for contagem_alunos_por_curso in lista_contagem_alunos_por_cursos%}
-                                            <p>{{contagem_alunos_por_curso}}</p>
-                                            {% endfor %}
-                                            <hr>
-                                            <h5><b>Por Campus:</b></h5>
-                                            {% for contagem_alunos_por_campus in lista_contagem_alunos_por_campus%}
-                                            <p>{{contagem_alunos_por_campus}}</p>
-                                            {% endfor %}
+                            </div>
+                            <div class="col-xl-4 col-lg-5" >
+                                <div class="card">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Distribuição dos alunos ativos e inativos</h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div class="chart-pie pt-4">
+                                            <canvas id="GraficoAtivosInativos"></canvas>
                                         </div>
+                                        <hr>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>N.</th>
-                                            <th>Matricula</th>
-                                            <th>Nome Completo</th>
-                                            <th>CPF</th>
-                                            <th>Curso</th>
-                                            <th>Data de Nascimento</th>
-                                            <th>Situação</th>
-                                            <th>Forma de Ingresso</th>
-                                            <th>Vinculo</th>
-                                            <th>Alterar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for aluno in object_list %}
-                                        <tr>
-                                            <td>{{forloop.counter}}</td>
-                                            <td>{{aluno.matricula}}</td>
-                                            <td>{{aluno.nome_completo}}</td>
-                                            <td>{{aluno.cpf}}</td>
-                                            <td>{{aluno.curso}}</td>
-                                            <td>{{aluno.data_de_nascimento}}</td>
-                                            <td>{{aluno.get_situacao_display}}</td>
-                                            <td>{{aluno.get_forma_de_ingresso_display}}</td>
-                                            <td>
-                                                {{aluno.get_vinculo_display}}
-                                                <!-- <div class="container">
-                                                    {{aluno.get_vinculo_display}}
-                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
-                                                        style="color: #4e73df;"></i>
-                                                </div> -->
-                                            </td>
-                                            <td>
-                                                <div class="container">
-                                                    <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
-                                                        style="color: #4e73df;"></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <div id="meuModal{{aluno.id}}" class="modal" style="z-index: 6;">
-                                            <div class="modal-content">
-                                                <form method="post">
-                                                    {% csrf_token %}
-                                                    <div>
-                                                        <label for="selecionar-situacao">Selecione o novo
-                                                            vinculo:</label>
-                                                        <select id="selecionar-situacao" name="atualizar"
-                                                            class="form-control">
-                                                            {% for situ in situacao %}
-                                                            <option value={{aluno.id}},{{situ.0}}>{{ situ.1 }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                        <br>
-                                                        <div class="botoes-container">
-                                                            <button class="btn btn-primary" type="submit"
-                                                                style="width: 100px;">Enviar</button>
-                                                            <button type="button" class="btn btn-danger"
-                                                                onclick=fecharModal({{aluno.id}})
-                                                                style="width: 100px;">Cancelar</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                    
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary" style="padding-top: 8px;">Alunos</h6>
+                                <!-- <div class="card">
+                                    <div class="card-header">
+                                        <div>
+                                            <i onclick=toggleCard('filtro') class="fa-solid fa-circle-chevron-down showicon"></i>
+                                            Filtros
+                                        </div>
+                                    </div>
+                                    <div class="card-content" id='filtro'>
+                                        <div class="card-body">
+                                            <div class="select-container">
+                                                <label for="select1">Curso:</label>
+                                                <select class="form-control" id="select1" onchange="window.location.href = this.value;">
+                                                    <option value="" selected>Selecione uma opção</option>
+                                                    {% for curso in cursos%}
+                                                    <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <br>
+                                                <label for="select2">Campus:</label>
+                                                <select class="form-control" id="select2" onchange="window.location.href = this.value;">
+                                                    <option value="" selected>Selecione uma opção</option>
+                                                    {% for campuss in campus %}
+                                                    <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                
+                                    </div>
+                                </div> -->
+                                <div id="menus_dropdown">
+                                    <div id="container_select_filter" style="margin-right: 20px;">
+                                        <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filtro_conteudo" aria-expanded="false" aria-controls="collapseExample">
+                                            <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                            Filtros
+                                        </button>
+                                        <div class="collapse" id="filtro_conteudo">
+                                            <div class="card card-body" id="TextC">
+                                                <label for="select1">Curso:</label>
+                                                <select class="form-control" id="select1" onchange="window.location.href = this.value;">
+                                                    <option value="" selected>Selecione uma opção</option>
+                                                    {% for curso in cursos%}
+                                                    <option value="{% url 'gerenciamento_academico:lista-curso' curso.id %}">{{curso}}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <label for="select2" style="margin-top: 10px;">Campus:</label>
+                                                <select class="form-control" id="select2" onchange="window.location.href = this.value;">
+                                                    <option value="" selected>Selecione uma opção</option>
+                                                    {% for campuss in campus %}
+                                                    <option value="{% url 'gerenciamento_academico:lista-campus' campuss.0 %}">{{ campuss.1 }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="container_select_filter">
+                                        <button id="botao_filtro" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                            <i class="fa-solid fa-caret-down" style="color: #ffffff;"></i>
+                                            Contagem
+                                        </button>
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="card card-body" id="TextC">
+                                                <h5><b>Geral:</b></h5>
+                                                <p>Total de Alunos Geral: {{contagem_alunos_geral}}</p>
+                                                <p>Total de Alunos Ativos: {{contagem_alunos_ativos}}</p>
+                                                <p>Total de Alunos Inativos: {{contagem_alunos_inativos}}</p>
+                                                <hr>
+                                                <h5><b>Por Curso:</b></h5>
+                                                {% for i in lista_numero_de_alunos_por_curso_apresentacao%}
+                                                <p>{{i}}</p>
+                                                {% endfor %}
+                                                <hr>
+                                                <h5><b>Por Campus:</b></h5>
+                                                {% for i in lista_numero_de_alunos_por_campus_apresentacao%}
+                                                <p>{{i}}</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>N.</th>
+                                                <th>Matricula</th>
+                                                <th>Nome Completo</th>
+                                                <th>CPF</th>
+                                                <th>Curso</th>
+                                                <th>Data de Nascimento</th>
+                                                <th>Situação</th>
+                                                <th>Forma de Ingresso</th>
+                                                <th>Vinculo</th>
+                                                <th>Alterar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for aluno in object_list %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{aluno.matricula}}</td>
+                                                <td>{{aluno.nome_completo}}</td>
+                                                <td>{{aluno.cpf}}</td>
+                                                <td>{{aluno.curso}}</td>
+                                                <td>{{aluno.data_de_nascimento}}</td>
+                                                <td>{{aluno.get_situacao_display}}</td>
+                                                <td>{{aluno.get_forma_de_ingresso_display}}</td>
+                                                <td>
+                                                    {{aluno.get_vinculo_display}}
+                                                    <!-- <div class="container">
+                                                        {{aluno.get_vinculo_display}}
+                                                        <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                            style="color: #4e73df;"></i>
+                                                    </div> -->
+                                                </td>
+                                                <td>
+                                                    <div class="container">
+                                                        <i onclick=mostrarModal({{aluno.id}}) class="fa-solid fa-pencil"
+                                                            style="color: #4e73df;"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <div id="meuModal{{aluno.id}}" class="modal" style="z-index: 6;">
+                                                <div class="modal-content">
+                                                    <form method="post">
+                                                        {% csrf_token %}
+                                                        <div>
+                                                            <label for="selecionar-situacao">Selecione o novo
+                                                                vinculo:</label>
+                                                            <select id="selecionar-situacao" name="atualizar"
+                                                                class="form-control">
+                                                                {% for situ in situacao %}
+                                                                <option value={{aluno.id}},{{situ.0}}>{{ situ.1 }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <br>
+                                                            <div class="botoes-container">
+                                                                <button class="btn btn-primary" type="submit"
+                                                                    style="width: 100px;">Enviar</button>
+                                                                <button type="button" class="btn btn-danger"
+                                                                    onclick=fecharModal({{aluno.id}})
+                                                                    style="width: 100px;">Cancelar</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
-
                 </div>
             </div>
         </div>
@@ -320,6 +382,7 @@
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js'%}"></script>
 
     <script>
         function mostrarModal(Number) {
@@ -343,7 +406,75 @@
         }
 
     </script>
+    <script>
+        var cursos = {{lista_nome_dos_cursos|safe}};
+        var contagem = {{lista_numero_de_alunos_por_curso|safe}};
+        var ctx = document.getElementById('GraficoCursos').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'doughnut',
+
+            // The data for our dataset
+            data: {
+                labels: cursos,
+                datasets: [{
+                data: contagem,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
     
+    <script>
+        var campus = {{lista_nome_dos_campus|safe}};
+        var contagem = {{lista_numero_de_alunos_por_campus|safe}};
+        var ctx = document.getElementById('GraficoCampus').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'doughnut',
+
+            // The data for our dataset
+            data: {
+                labels: campus,
+                datasets: [{
+                data: contagem,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
+    <script>
+        var contagem = {{lista_alunos_ativos_inativos|safe}};
+        var ctx = document.getElementById('GraficoAtivosInativos').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'doughnut',
+
+            // The data for our dataset
+            data: {
+                labels: ['Ativos','Inativos'],
+                datasets: [{
+                data: contagem,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
 </body>
 
 </html>
