@@ -104,7 +104,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/alunos/list">
-                <i class="fa-solid fa-school fa-2xl" style="color: #ffffff;"></i>
+                <i class="fa-solid fa-graduation-cap fa-2xl" style="color: #ffffff;"></i>
                 <div class="sidebar-brand-text mx-3">G.A</div>
             </a>
             <!-- Divider -->
@@ -136,7 +136,10 @@
             <div id="content">
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <h1>Gerenciamento Acadêmico</h1>
+                    <div class="container" style="padding-top: 30px; padding-bottom: 15px;">
+                        <h1>Gerenciamento Acadêmico</h1>
+                    </div>
+                    
                     <!-- Sidebar Toggle (Topbar) -->
                     <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -419,7 +422,7 @@
                 labels: cursos,
                 datasets: [{
                 data: contagem,
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc','#8C2155','#D8CC34','#3D3B8E','#D1495B'],
                 hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
                 hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }],
@@ -443,7 +446,7 @@
                 labels: campus,
                 datasets: [{
                 data: contagem,
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc','#8C2155','#D8CC34','#3D3B8E','#D1495B'],
                 hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
                 hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }],
@@ -465,7 +468,7 @@
                 labels: ['Ativos','Inativos'],
                 datasets: [{
                 data: contagem,
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc','#8C2155','#D8CC34','#3D3B8E','#D1495B'],
                 hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
                 hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }],
